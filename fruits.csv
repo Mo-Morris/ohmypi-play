@@ -1,0 +1,13 @@
+id,name,en,origin,cat,price,unit,img
+1,红富士苹果,Apple,陕西·洛川,apple,8.80,500g,https://images.unsplash.com/photo-1630563451961-ac2ff27616ab?w=400&h=400&fit=crop&auto=format
+2,海南香蕉,Banana,海南·三亚,banana,4.50,500g,https://images.unsplash.com/photo-1528825871115-3581a5387919?w=400&h=400&fit=crop&auto=format
+3,江西脐橙,Orange,江西·赣州,orange,6.90,500g,https://images.unsplash.com/photo-1557800636-894a64c1696f?w=400&h=400&fit=crop&auto=format
+4,丹东草莓,Strawberry,辽宁·丹东,strawberry,22.00,500g,https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?w=400&h=400&fit=crop&auto=format
+5,吐鲁番葡萄,Grape,新疆·吐鲁番,grape,12.50,500g,https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&h=400&fit=crop&auto=format
+6,宁夏西瓜,Watermelon,宁夏·中卫,watermelon,3.20,500g,https://images.unsplash.com/photo-1595475207225-428b62bda831?w=400&h=400&fit=crop&auto=format
+7,台湾凤梨,Pineapple,台湾·屏东,pineapple,9.90,个,https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&h=400&fit=crop&auto=format
+8,海南芒果,Mango,海南·三亚,mango,15.80,500g,https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=400&fit=crop&auto=format
+9,智利车厘子,Cherry,智利·圣地亚哥,cherry,39.90,500g,https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=400&h=400&fit=crop&auto=format
+10,新西兰奇异果,Kiwi,新西兰·蒂普基,kiwi,11.50,个,https://images.unsplash.com/photo-1618897996318-5a901fa6ca71?w=400&h=400&fit=crop&auto=format
+11,奉化水蜜桃,Peach,浙江·奉化,peach,14.00,500g,https://images.unsplash.com/photo-1629828874514-c1e5103f2150?w=400&h=400&fit=crop&auto=format
+12,东北蓝莓,Blueberry,黑龙江·大兴安岭,blueberry,28.00,125g,https://images.unsplash.com/photo-1594002348772-bc0cb57ade8b?w=400&h=400&fit=crop&auto=format
