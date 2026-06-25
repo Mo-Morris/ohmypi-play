@@ -287,7 +287,9 @@ header p { font-size: 1.1rem; opacity: 0.9; margin-top: 0.3rem; position: relati
 </div>
 
 <div class="container">
-  <div class="grid" id="productGrid"></div>
+  <div class="grid" id="productGrid">
+    <div class="empty">正在加载商品...</div>
+  </div>
 </div>
 
 <div class="overlay" id="overlay" onclick="toggleCart()"></div>
@@ -311,48 +313,27 @@ header p { font-size: 1.1rem; opacity: 0.9; margin-top: 0.3rem; position: relati
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Fruit Data ──────────────────────────────────────────
-const fruits = [
-  { id: 1, name: '红富士苹果', en: 'Apple', origin: '陕西·洛川', cat: 'apple', price: 8.80, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1630563451961-ac2ff27616ab?w=400&h=400&fit=crop&auto=format' },
-  { id: 2, name: '海南香蕉', en: 'Banana', origin: '海南·三亚', cat: 'banana', price: 4.50, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?w=400&h=400&fit=crop&auto=format' },
-  { id: 3, name: '江西脐橙', en: 'Orange', origin: '江西·赣州', cat: 'orange', price: 6.90, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?w=400&h=400&fit=crop&auto=format' },
-  { id: 4, name: '丹东草莓', en: 'Strawberry', origin: '辽宁·丹东', cat: 'strawberry', price: 22.00, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?w=400&h=400&fit=crop&auto=format' },
-  { id: 5, name: '吐鲁番葡萄', en: 'Grape', origin: '新疆·吐鲁番', cat: 'grape', price: 12.50, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&h=400&fit=crop&auto=format' },
-  { id: 6, name: '宁夏西瓜', en: 'Watermelon', origin: '宁夏·中卫', cat: 'watermelon', price: 3.20, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1595475207225-428b62bda831?w=400&h=400&fit=crop&auto=format' },
-  { id: 7, name: '台湾凤梨', en: 'Pineapple', origin: '台湾·屏东', cat: 'pineapple', price: 9.90, unit: '个',
-    img: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&h=400&fit=crop&auto=format' },
-  { id: 8, name: '海南芒果', en: 'Mango', origin: '海南·三亚', cat: 'mango', price: 15.80, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400&h=400&fit=crop&auto=format' },
-  { id: 9, name: '智利车厘子', en: 'Cherry', origin: '智利·圣地亚哥', cat: 'cherry', price: 39.90, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=400&h=400&fit=crop&auto=format' },
-  { id: 10, name: '新西兰奇异果', en: 'Kiwi', origin: '新西兰·蒂普基', cat: 'kiwi', price: 11.50, unit: '个',
-    img: 'https://images.unsplash.com/photo-1618897996318-5a901fa6ca71?w=400&h=400&fit=crop&auto=format' },
-  { id: 11, name: '奉化水蜜桃', en: 'Peach', origin: '浙江·奉化', cat: 'peach', price: 14.00, unit: '500g',
-    img: 'https://images.unsplash.com/photo-1629828874514-c1e5103f2150?w=400&h=400&fit=crop&auto=format' },
-  { id: 12, name: '东北蓝莓', en: 'Blueberry', origin: '黑龙江·大兴安岭', cat: 'blueberry', price: 28.00, unit: '125g',
-    img: 'https://images.unsplash.com/photo-1594002348772-bc0cb57ade8b?w=400&h=400&fit=crop&auto=format' }
-];
-
-// Unique categories for filter bar
-const cats = [...new Set(fruits.map(f => f.cat))];
+// ── API Data ────────────────────────────────────────────
+let fruits = [];
+let categories = [];
 const filterBar = document.getElementById('filterBar');
-cats.forEach(c => {
-  const names = { apple:'苹果', banana:'香蕉', orange:'橙子', strawberry:'草莓',
-    grape:'葡萄', watermelon:'西瓜', pineapple:'凤梨', mango:'芒果',
-    cherry:'车厘子', kiwi:'奇异果', peach:'桃子', blueberry:'蓝莓' };
-  const btn = document.createElement('button');
-  btn.className = 'filter-btn';
-  btn.dataset.cat = c;
-  btn.textContent = '🍑 ' + (names[c] || c);
-  btn.addEventListener('click', () => filter(c, btn));
-  filterBar.appendChild(btn);
-});
+
+async function fetchJson(url, options) {
+  const response = await fetch(url, options);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+
+function renderFilters() {
+  categories.forEach(({ cat, name }) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.cat = cat;
+    btn.textContent = '🍑 ' + name;
+    btn.addEventListener('click', () => filter(cat, btn));
+    filterBar.appendChild(btn);
+  });
+}
 
 let activeFilter = 'all';
 function filter(cat, btn) {
@@ -380,12 +361,16 @@ function removeFromCart(id) {
   updateCart();
 }
 
-function updateCart() {
-  const count = Object.values(cart).reduce((a, b) => a + b, 0);
-  const total = Object.entries(cart).reduce((sum, [id, qty]) => {
-    const f = fruits.find(x => x.id === +id);
-    return sum + (f ? f.price * qty : 0);
-  }, 0);
+async function getCartQuote() {
+  return fetchJson('/api/cart/quote', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cart }),
+  });
+}
+
+async function updateCart() {
+  const { count, total } = await getCartQuote();
   document.getElementById('cartCount').textContent = count;
   document.getElementById('cartTotal').textContent = '¥' + total.toFixed(2);
   document.getElementById('cartPanelTotal').textContent = '¥' + total.toFixed(2);
@@ -428,15 +413,13 @@ function toggleCart() {
 }
 
 function checkout() {
-  const total = Object.entries(cart).reduce((sum, [id, qty]) => {
-    const f = fruits.find(x => x.id === +id);
-    return sum + (f ? f.price * qty : 0);
-  }, 0);
-  if (total === 0) { showToast('购物车是空的'); return; }
-  const msg = `结算成功！共 ¥${total.toFixed(2)}，感谢光临 🎉`;
-  showToast(msg);
-  cart = {};
-  updateCart();
+  getCartQuote().then(({ total }) => {
+    if (total === 0) { showToast('购物车是空的'); return; }
+    const msg = `结算成功！共 ¥${total.toFixed(2)}，感谢光临 🎉`;
+    showToast(msg);
+    cart = {};
+    updateCart();
+  });
 }
 
 function showToast(msg) {
@@ -452,6 +435,11 @@ function render() {
   const items = activeFilter === 'all'
     ? fruits
     : fruits.filter(f => f.cat === activeFilter);
+
+  if (items.length === 0) {
+    grid.innerHTML = '<div class="empty">暂无商品</div>';
+    return;
+  }
 
   grid.innerHTML = items.map(f => {
     const inCart = cart[f.id] || 0;
@@ -473,7 +461,22 @@ function render() {
   }).join('');
 }
 
-render();
+async function init() {
+  try {
+    [fruits, categories] = await Promise.all([
+      fetchJson('/api/fruits'),
+      fetchJson('/api/categories'),
+    ]);
+    renderFilters();
+    render();
+    updateCart();
+  } catch (error) {
+    document.getElementById('productGrid').innerHTML = '<div class="empty">商品加载失败，请稍后重试</div>';
+    showToast('商品数据加载失败');
+  }
+}
+
+init();
 </script>
 </body>
 </html>
