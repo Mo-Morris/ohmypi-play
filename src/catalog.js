@@ -1,9 +1,11 @@
-export function filterFruits(items, category) {
-	if (category === "all") {
-		return items;
-	}
+export function filterFruits(items, category, query = "") {
+	const normalizedQuery = query.trim().toLocaleLowerCase("zh-CN");
 
-	return items.filter((fruit) => fruit.category === category);
+	return items.filter((fruit) => {
+		const matchesCategory = category === "all" || fruit.category === category;
+		const matchesOrigin = normalizedQuery === "" || fruit.origin.toLocaleLowerCase("zh-CN").includes(normalizedQuery);
+		return matchesCategory && matchesOrigin;
+	});
 }
 
 export function listCategories(items) {

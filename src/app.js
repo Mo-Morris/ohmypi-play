@@ -14,12 +14,14 @@ const elements = {
 	filterBar: document.querySelector("#filterBar"),
 	overlay: document.querySelector("#overlay"),
 	productGrid: document.querySelector("#productGrid"),
+	searchInput: document.querySelector("#searchInput"),
 	toast: document.querySelector("#toast"),
 	viewCartButton: document.querySelector("#viewCartButton"),
 };
 
 let activeCategory = "all";
 let cart = {};
+let searchQuery = "";
 
 function createCategoryButtons() {
 	for (const category of listCategories(fruits)) {
@@ -33,7 +35,7 @@ function createCategoryButtons() {
 }
 
 function renderProducts() {
-	const visibleFruits = filterFruits(fruits, activeCategory);
+	const visibleFruits = filterFruits(fruits, activeCategory, searchQuery);
 	elements.productGrid.innerHTML = visibleFruits
 		.map(
 			(fruit) => `
@@ -134,6 +136,10 @@ document.addEventListener("click", (event) => {
 elements.viewCartButton.addEventListener("click", () => setCartOpen(true));
 elements.closeCartButton.addEventListener("click", () => setCartOpen(false));
 elements.overlay.addEventListener("click", () => setCartOpen(false));
+elements.searchInput.addEventListener("input", () => {
+	searchQuery = elements.searchInput.value;
+	renderProducts();
+});
 elements.checkoutButton.addEventListener("click", () => {
 	const total = calculateTotal(cart, fruits);
 	if (total === 0) {
